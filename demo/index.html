@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Demo: Auto Completer Module</title>
-	<link rel="stylesheet" type="text/css" href="../../styles/auto_completer.css">
+	<link rel="stylesheet" type="text/css" href="../styles/auto_completer.css">
 </head>
 <body>
 	<p>Type "test" in any of the text fields to trigger a fake AJAX request.</p>
@@ -66,7 +66,6 @@
 	</div>
 
 	<p>&nbsp;</p>
-	<!--
 	<div data-modules="Module.AutoCompleterModule" data-module-options='{ "searchURL": "/search", "hideOnRemove": true }' data-action="focusInput">
 		<ol class="module-autoCompleter-items">
 			<li class="module-autoCompleter-input" contenteditable data-action="handleKeyPress" data-action-keydown="handleKeyDown" data-action-keyup="search"></li>
@@ -81,11 +80,10 @@
 			<input type="hidden" name="fruits[#{timestamp}][id]" value="">
 		</script>
 	</div>
-	-->
 
 	<!-- Mock AJAX for Demonstration purposes only -->
-	<script type="text/javascript" src="../../bower_components/mocking_bird/src/mocking_bird.js"></script>
-	<script type="text/javascript" src="../../bower_components/mocking_bird/src/mocking_bird/xml_http_request.js"></script>
+	<script type="text/javascript" src="../bower_components/mocking_bird/src/mocking_bird.js"></script>
+	<script type="text/javascript" src="../bower_components/mocking_bird/src/mocking_bird/xml_http_request.js"></script>
 	<script type="text/javascript">
 		MockingBird.XMLHttpRequest.disableNetworkConnections()
 			.mock("/search?query=test", "POST", {
@@ -117,37 +115,37 @@
 			});
 	</script>
 
-	<script type="text/javascript" src="../../bower_components/inherit.js/lib/function.js"></script>
-	<script type="text/javascript" src="../../bower_components/callbacks/src/callbacks.js"></script>
-	<script type="text/javascript" src="../../bower_components/callbacks/src/callbacks/utils.js"></script>
-	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer.js"></script>
-	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/json.js"></script>
-	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/query_string.js"></script>
-	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/xml.js"></script>
-	<script type="text/javascript" src="../../bower_components/dom_event_delegator/lib/dom/events/delegator.js"></script>
-	<script type="text/javascript" src="../../bower_components/element_store/lib/element_store.js"></script>
-	<script type="text/javascript" src="../../bower_components/element_store/lib/element_store/utils.js"></script>
-	<script type="text/javascript" src="../../bower_components/beacon/src/beacon.js"></script>
-	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/dispatcher.js"></script>
-	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/application_events.js"></script>
-	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/notifications.js"></script>
-	<script type="text/javascript" src="../../bower_components/hash/lib/hash.js"></script>
-	<script type="text/javascript" src="../../bower_components/reaper/src/reaper.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/factory.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/manager.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/lazy_loader.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/meta_data.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/provider.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-manager/src/module/auto_completer_module.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-base/src/module/base.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/property_cache.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/bootstrap.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/delegator.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/events.js"></script>
-	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/element_store.js"></script>
-	<script type="text/javascript" src="../../src/module/auto_completer_module.js"></script>
+	<script type="text/javascript" src="../bower_components/inherit.js/lib/function.js"></script>
+	<script type="text/javascript" src="../bower_components/callbacks/src/callbacks.js"></script>
+	<script type="text/javascript" src="../bower_components/callbacks/src/callbacks/utils.js"></script>
+	<script type="text/javascript" src="../bower_components/cerealizer/src/cerealizer.js"></script>
+	<script type="text/javascript" src="../bower_components/cerealizer/src/cerealizer/json.js"></script>
+	<script type="text/javascript" src="../bower_components/cerealizer/src/cerealizer/query_string.js"></script>
+	<script type="text/javascript" src="../bower_components/cerealizer/src/cerealizer/xml.js"></script>
+	<script type="text/javascript" src="../bower_components/dom_event_delegator/lib/dom/events/delegator.js"></script>
+	<script type="text/javascript" src="../bower_components/element_store/lib/element_store.js"></script>
+	<script type="text/javascript" src="../bower_components/element_store/lib/element_store/utils.js"></script>
+	<script type="text/javascript" src="../bower_components/beacon/src/beacon.js"></script>
+	<script type="text/javascript" src="../bower_components/beacon/src/beacon/dispatcher.js"></script>
+	<script type="text/javascript" src="../bower_components/beacon/src/beacon/application_events.js"></script>
+	<script type="text/javascript" src="../bower_components/beacon/src/beacon/notifications.js"></script>
+	<script type="text/javascript" src="../bower_components/hash/lib/hash.js"></script>
+	<script type="text/javascript" src="../bower_components/reaper/src/reaper.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/factory.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/manager.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/lazy_loader.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/meta_data.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/provider.js"></script>
+	<script type="text/javascript" src="../bower_components/module-manager/src/module/auto_completer_module.js"></script>
+	<script type="text/javascript" src="../bower_components/module-base/src/module/base.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils/property_cache.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils/bootstrap.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils/delegator.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils/events.js"></script>
+	<script type="text/javascript" src="../bower_components/module-utils/src/module/utils/element_store.js"></script>
+	<script type="text/javascript" src="../src/module/auto_completer_module.js"></script>
 	<script type="text/javascript">
 
 		// Create the module manager
