@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Demo: Auto Completer Module</title>
+	<link rel="stylesheet" type="text/css" href="../../styles/auto_completer.css">
+</head>
+<body>
+	<p>Type "test" in any of the text fields to trigger a fake AJAX request.</p>
+	<p>Type "error" in any of the text fields to trigger a fake AJAX error.</p>
+
+	<div data-modules="Module.AutoCompleterModule" data-module-options='{
+		"defaultModule":true,
+		"removeConfirmation": "Are you sure you want to remove this fruit?",
+		"searchURL": "/search"
+	}' data-action="focusInput">
+		<ol class="module-autoCompleter-items">
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Apples</span>
+				<input type="hidden" name="fruits[0][id]" value="1">
+				<input type="hidden" name="fruits[0][_destroy]">
+			</li>
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Oranges</span>
+				<input type="hidden" name="fruits[1][id]" value="2">
+				<input type="hidden" name="fruits[1][_destroy]">
+			</li>
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Peaches</span>
+				<input type="hidden" name="fruits[2][id]" value="3">
+				<input type="hidden" name="fruits[2][_destroy]">
+			</li>
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Ugly Fruit</span>
+				<input type="hidden" name="fruits[3][id]" value="4">
+				<input type="hidden" name="fruits[3][_destroy]">
+			</li>
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Pears</span>
+				<input type="hidden" name="fruits[4][id]" value="5">
+				<input type="hidden" name="fruits[4][_destroy]">
+			</li>
+			<li>
+				<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+				<span class="module-autoCompleter-item-text">Nectarines</span>
+				<input type="hidden" name="fruits[5][id]" value="6">
+				<input type="hidden" name="fruits[5][_destroy]">
+			</li>
+			<li class="module-autoCompleter-input" contenteditable data-action="handleKeyPress" data-action-keydown="handleKeyDown" data-action-keyup="search"></li>
+		</ol>
+
+		<ol class="module-autoCompleter-suggestions" style="display: none;">
+			<li>Search for fruits</li>
+		</ol>
+		<ol class="module-autoCompleter-destroyed-items"></ol>
+		<script type="text/html" class="module-autoCompleter-item-template">
+			<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+			<span class="module-autoCompleter-item-text">#{searchText}</span>
+			<input type="hidden" name="fruits[#{timestamp}][id]" value="">
+		</script>
+	</div>
+
+	<p>&nbsp;</p>
+	<!--
+	<div data-modules="Module.AutoCompleterModule" data-module-options='{ "searchURL": "/search", "hideOnRemove": true }' data-action="focusInput">
+		<ol class="module-autoCompleter-items">
+			<li class="module-autoCompleter-input" contenteditable data-action="handleKeyPress" data-action-keydown="handleKeyDown" data-action-keyup="search"></li>
+		</ol>
+		<ol class="module-autoCompleter-suggestions" style="display: none;">
+			<li>Search for stuff</li>
+		</ol>
+		<ol class="module-autoCompleter-destroyed-items"></ol>
+		<script type="text/html" class="module-autoCompleter-item-template">
+			<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>
+			<span class="module-autoCompleter-item-text">#{searchText}</span>
+			<input type="hidden" name="fruits[#{timestamp}][id]" value="">
+		</script>
+	</div>
+	-->
+
+	<!-- Mock AJAX for Demonstration purposes only -->
+	<script type="text/javascript" src="../../bower_components/mocking_bird/src/mocking_bird.js"></script>
+	<script type="text/javascript" src="../../bower_components/mocking_bird/src/mocking_bird/xml_http_request.js"></script>
+	<script type="text/javascript">
+		MockingBird.XMLHttpRequest.disableNetworkConnections()
+			.mock("/search?query=test", "POST", {
+				status: 200,
+				body: [
+					'<li data-action="selectSuggestion">',
+						'<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>',
+						'<span class="module-autoCompleter-item-text">Oranges</span>',
+						'<input type="hidden" name="fruits[6][id]" value="7">',
+						'<input type="hidden" name="fruits[6][_destroy]">',
+					'</li>',
+					'<li data-action="selectSuggestion">',
+						'<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>',
+						'<span class="module-autoCompleter-item-text">Kiwi</span>',
+						'<input type="hidden" name="fruits[7][id]" value="8">',
+						'<input type="hidden" name="fruits[7][_destroy]">',
+					'</li>',
+					'<li data-action="selectSuggestion">',
+						'<a class="module-autoCompleter-item-remove" data-action="removeItem">x</a>',
+						'<span class="module-autoCompleter-item-text">Cactus Fruit</span>',
+						'<input type="hidden" name="fruits[8][id]" value="9">',
+						'<input type="hidden" name="fruits[8][_destroy]">',
+					'</li>'
+				].join("\n ")
+			})
+			.mock("/search?query=error", "POST", {
+				status: 500,
+				body: ""
+			});
+	</script>
+
+	<script type="text/javascript" src="../../bower_components/inherit.js/lib/function.js"></script>
+	<script type="text/javascript" src="../../bower_components/callbacks/src/callbacks.js"></script>
+	<script type="text/javascript" src="../../bower_components/callbacks/src/callbacks/utils.js"></script>
+	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer.js"></script>
+	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/json.js"></script>
+	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/query_string.js"></script>
+	<script type="text/javascript" src="../../bower_components/cerealizer/src/cerealizer/xml.js"></script>
+	<script type="text/javascript" src="../../bower_components/dom_event_delegator/lib/dom/events/delegator.js"></script>
+	<script type="text/javascript" src="../../bower_components/element_store/lib/element_store.js"></script>
+	<script type="text/javascript" src="../../bower_components/element_store/lib/element_store/utils.js"></script>
+	<script type="text/javascript" src="../../bower_components/beacon/src/beacon.js"></script>
+	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/dispatcher.js"></script>
+	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/application_events.js"></script>
+	<script type="text/javascript" src="../../bower_components/beacon/src/beacon/notifications.js"></script>
+	<script type="text/javascript" src="../../bower_components/hash/lib/hash.js"></script>
+	<script type="text/javascript" src="../../bower_components/reaper/src/reaper.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/factory.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/manager.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/lazy_loader.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/meta_data.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/provider.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-manager/src/module/auto_completer_module.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-base/src/module/base.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/property_cache.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/bootstrap.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/delegator.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/events.js"></script>
+	<script type="text/javascript" src="../../bower_components/module-utils/src/module/utils/element_store.js"></script>
+	<script type="text/javascript" src="../../src/module/auto_completer_module.js"></script>
+	<script type="text/javascript">
+
+		// Create the module manager
+		var moduleManager = new Module.Manager();
+
+		// Assign the module factory
+		moduleManager.factory = new Module.Factory();
+
+		moduleManager
+			.init()                                     // ready this manager for use
+			.eagerLoadModules(document.documentElement) // load all non lazy loaded modules
+			.lazyLoadModules(document.documentElement); // monitor page for modules that need lazy loading
+
+		// Set focus to the "default" module on the page
+		moduleManager.focusDefaultModule();
+
+		var autoCompleter = moduleManager.registry["0"].module;
+
+	</script>
+</body>
+</html>

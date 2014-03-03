@@ -1,0 +1,89 @@
+.module-autoCompleter {
+	border: 1px inset #ccc;
+	cursor: text;
+	padding: 2px;
+	position: relative;
+}
+.module-autoCompleter.loading ol.module-autoCompleter-suggestions {
+	opacity: .5;
+}
+.module-autoCompleter-destroyed-items {
+	display: none;
+}
+.module-autoCompleter-item-remove {
+	color: blue;
+	cursor: pointer;
+	text-decoration: none;
+}
+ol.module-autoCompleter-items {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+ol.module-autoCompleter-items:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+ol.module-autoCompleter-items li {
+	border: 1px solid #C9E4FF;
+	border-radius: 8px;
+	background-color: #C9E4FF;
+	cursor: default;
+	float: left;
+	line-height: 26px;
+	margin-right: .25em;
+	padding: 0 6px;
+}
+ol.module-autoCompleter-items li.module-autoCompleter-input {
+	background-color: transparent;
+	border-radius: 0;
+	border-color: transparent;
+	cursor: text;
+	min-height: 26px; /* Prevents text field from collapsing vertically with no items or search text in Firefox */
+	min-width: 1px;
+	padding: 0;
+	outline: none;
+}
+ol.module-autoCompleter-items li.selected {
+	border-color: #369;
+}
+ol.module-autoCompleter-items li.unknown {
+	background-color: #F4F4F4;
+	border-color: #D9D9D9;
+}
+ol.module-autoCompleter-items li.unknown.selected {
+	background-color: #dfdfdf;
+	border-color: #999;
+}
+ol.module-autoCompleter-suggestions {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-bottom-width: 0;
+	cursor: pointer;
+	left: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	z-index: 10000;
+}
+ol.module-autoCompleter-suggestions li {
+	border-bottom: 1px solid #ccc;
+	padding: 3px 6px;
+}
+ol.module-autoCompleter-suggestions li:hover,
+ol.module-autoCompleter-suggestions li.selected {
+	background-color: #f0f0f0;
+}
+ol.module-autoCompleter-suggestions li.error {
+	cursor: default;
+}
+ol.module-autoCompleter-suggestions li.error:hover {
+	background-color: transparent;
+}
+ol.module-autoCompleter-suggestions .module-autoCompleter-item-remove {
+	display: none;
+}
