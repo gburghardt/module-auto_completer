@@ -2,23 +2,6 @@ Module.AutoCompleterModule = Module.Base.extend({
 
 	prototype: {
 
-		actions: {
-			click: [
-				"focusInput",
-				"removeItem",
-				"selectSuggestion"
-			],
-			keydown: [
-				"handleKeyDown"
-			],
-			keypress: [
-				"handleKeyPress"
-			],
-			keyup: [
-				"search"
-			]
-		},
-
 		charCodes: {
 			BACKSPACE: 8,
 			DELETE: 46,
@@ -50,6 +33,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 		_hideTimer: null,
 
 		options: {
+			actionAttribute: "data-actions",
 			allowUnknownItems: true,
 			confirmOnRemove: true,
 			delay: 500,
@@ -67,27 +51,19 @@ Module.AutoCompleterModule = Module.Base.extend({
 
 		xhr: null,
 
-		_ready: function _ready() {
+		_ready: function() {
 			Module.Base.prototype._ready.call(this);
 
 			this.elementStore.returnNative = true;
-			this.handleBlur = this.handleBlur.bind(this);
-			this.handleDocumentClick = this.handleDocumentClick.bind(this);
-
-			if (this.element.addEventListener) {
-				this.input().addEventListener("blur", this.handleBlur, false);
-			}
-			else {
-				this.input().attachEvent("onblur", this.handleBlur);
-			}
 		},
 
-		destructor: function destructor(keepElement) {
-			if (this.element.removeEventListener) {
-				this.input().removeEventListener("blur", this.handleBlur, false);
+		destructor: function(keepElement) {
+			if (this._delayTimer) {
+				this.window.clearTimeout(this._delayTimer);
 			}
-			else {
-				this.input().detachEvent("onblur", this.handleBlur);
+
+			if (this._hideTimer) {
+				this.window.clearTimeout(this._hideTimer);
 			}
 
 			if (this.xhr) {
@@ -98,18 +74,20 @@ Module.AutoCompleterModule = Module.Base.extend({
 			Module.prototype.destructor.call(this, keepElement);
 		},
 
-		_addSelectedSuggestion: function _addSelectedSuggestion(searchText) {
+		_addSelectedSuggestion: function(searchText) {
 
 			var suggestion = this.selectedSuggestion();
 
 			if (!suggestion && this.options.allowUnknownItems) {
 				var data = {
 					searchText: searchText,
-					timestamp: new Date().getTime()
+					timestamp: new Date().getTime(),
+					guid: this.guid,
+					controllerId: this.controllerId
 				};
 
 				suggestion = this.document.createElement("li");
-				suggestion.removeAttribute("data-action");
+				suggestion.removeAttribute(this.options.actionAttribute);
 				suggestion.className = this.options.unknownItemClass;
 				suggestion.innerHTML = this.itemTemplate().innerHTML
 					.replace(/^\s+|\s+$/g, "")
@@ -120,30 +98,30 @@ Module.AutoCompleterModule = Module.Base.extend({
 			else if (suggestion) {
 				suggestion.parentNode.removeChild(suggestion);
 				suggestion.classList.remove(this.options.selectedClass);
-				suggestion.removeAttribute("data-action");
+				suggestion.removeAttribute(this.options.actionAttribute);
 			}
 
 			this._appendItem(suggestion);
 			this.input().innerHTML = "";
 		},
 
-		_appendItem: function _appendItem(newItem) {
+		_appendItem: function(newItem) {
 			if (this.notify("item.beforeAdd", { item: newItem })) {
 				this.itemList().insertBefore(newItem, this.input());
 				this.notify("item.afterAdd", { item: newItem })
 			}
 		},
 
-		focus: function focus() {
+		focus: function() {
 			if (this._hideTimer) {
-				clearTimeout(this._hideTimer);
+				this.window.clearTimeout(this._hideTimer);
 			}
 
 			this.input().focus();
 			this.showSuggestions();
 		},
 
-		focusInput: function focusInput(event, element, params) {
+		focusInput: function click(event, element, params) {
 			event.stop();
 			this.focus();
 
@@ -167,25 +145,21 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		getSearchText: function getSearchText() {
+		getSearchText: function() {
 			return this.input().innerHTML.replace(/(^\s+|\s+$|<br>)/g, "");
 		},
 
-		handleBlur: function handleBlur(event) {
+		handleBlur: function blur(event, element, params) {
 			var that = this;
 
-			this._hideTimer = setTimeout(function() {
+			this._hideTimer = this.window.setTimeout(function() {
 				that.hideSuggestions();
 				that._hideTimer = null;
 				that = null;
 			}, 200);
 		},
 
-		handleDocumentClick: function handleDocumentClick(event) {
-			this.hideSuggestions();
-		},
-
-		handleKeyDown: function handleKeyDown(event, element, params) {
+		handleKeyDown: function keydown(event, element, params) {
 			var code = event.keyCode || event.charCode,
 			    searchText = this.getSearchText();
 
@@ -203,7 +177,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		handleKeyPress: function handleKeyPress(event, element, params) {
+		handleKeyPress: function keypress(event, element, params) {
 			var code = event.keyCode || event.charCode,
 			    searchText = this.getSearchText();
 
@@ -213,7 +187,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		hideSuggestions: function hideSuggestions() {
+		hideSuggestions: function() {
 			var list = this.suggestionList();
 
 			if (list.style.display !== "none") {
@@ -222,7 +196,14 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		_removeItem: function _removeItem(item) {
+		onControllerRegistered: function(frontController, controllerId) {
+			frontController.registerEvents("blur", "keypress", "keydown", "keyup");
+		},
+
+		onControllerUnregistered: function(frontController) {
+		},
+
+		_removeItem: function(item) {
 			if (this.notify("item.beforeRemove", { item: item })) {
 				item.parentNode.removeChild(item);
 
@@ -244,7 +225,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		removeItem: function removeItem(event, element, params) {
+		removeItem: function click(event, element, params) {
 			event.stop();
 
 			if (!this.options.confirmOnRemove || confirm(this.options.removeConfirmation)) {
@@ -253,7 +234,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		_removeLastItem: function _removeLastItem() {
+		_removeLastItem: function() {
 			var sibling = this.input().previousSibling;
 
 			while (sibling && sibling.nodeName !== "LI") {
@@ -265,7 +246,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		search: function search(event, element, params) {
+		search: function keyup(event, element, params) {
 			var code = event.keyCode || event.charCode,
 			    searchText = this.getSearchText(),
 			    charCodes = this.charCodes;
@@ -282,19 +263,19 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 			else if (searchText.length >= this.options.minChars) {
 				if (this._delayTimer) {
-					clearTimeout(this._delayTimer);
+					this.window.clearTimeout(this._delayTimer);
 				}
 
 				var that = this;
 
-				this._delayTimer = setTimeout(function() {
+				this._delayTimer = this.window.setTimeout(function() {
 					that._search(searchText);
 					that = event = element = params = null;
 				}, this.options.delay);
 			}
 		},
 
-		_search: function _search(searchText) {
+		_search: function(searchText) {
 			if (!this.options.searchURL) {
 				throw new Error("Missing required option: searchURL");
 			}
@@ -305,14 +286,18 @@ Module.AutoCompleterModule = Module.Base.extend({
 			        + (/\?/.test(this.options.searchURL) ? "&" : "?")
 			        + escape(this.options.searchParam)
 			        + "=" + escape(searchText),
-			    method = this.options.searchMethod.toUpperCase();
+			    method = this.options.searchMethod.toUpperCase(),
+			    renderData = { guid: this.guid, controllerId: this.controllerId };
 
 			xhr.onreadystatechange = function() {
 				if (this.readyState !== 4) {
 					return;
 				}
 				else if (this.status === 200) {
-					that.suggestionList().innerHTML = this.responseText;
+					that.suggestionList().innerHTML = this.responseText
+						.replace(/#\{(\w+)\}/g, function(match, key) {
+							return renderData[key] || "";
+						});
 					that.notify("search.success", { text: searchText, xhr: xhr, url: url, method: method });
 				}
 				else {
@@ -335,7 +320,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 			}
 		},
 
-		_selectNextSuggestion: function _selectNextSuggestion() {
+		_selectNextSuggestion: function() {
 			var suggestion = this.selectedSuggestion();
 
 			if (suggestion) {
@@ -345,7 +330,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 					suggestion = suggestion.nextSibling;
 				}
 
-				if (suggestion && suggestion.getAttribute("data-action")) {
+				if (suggestion && suggestion.getAttribute(this.options.actionAttribute)) {
 					this.selectedSuggestion().classList.remove(this.options.selectedClass)
 					suggestion.classList.add(this.options.selectedClass);
 				}
@@ -353,13 +338,13 @@ Module.AutoCompleterModule = Module.Base.extend({
 			else {
 				suggestion = this.firstSuggestion();
 
-				if (suggestion && suggestion.getAttribute("data-action")) {
+				if (suggestion && suggestion.getAttribute(this.options.actionAttribute)) {
 					suggestion.classList.add(this.options.selectedClass);
 				}
 			}
 		},
 
-		_selectPrevSuggestion: function _selectPrevSuggestion() {
+		_selectPrevSuggestion: function() {
 			var suggestion = this.selectedSuggestion();
 
 			if (suggestion) {
@@ -369,7 +354,7 @@ Module.AutoCompleterModule = Module.Base.extend({
 					suggestion = suggestion.previousSibling;
 				}
 
-				if (suggestion && suggestion.getAttribute("data-action")) {
+				if (suggestion && suggestion.getAttribute(this.options.actionAttribute)) {
 					this.selectedSuggestion().classList.remove(this.options.selectedClass)
 					suggestion.classList.add(this.options.selectedClass);
 				}
@@ -378,20 +363,20 @@ Module.AutoCompleterModule = Module.Base.extend({
 				var suggestions = this.suggestions(),
 				    suggestion = suggestions[suggestions.length - 1];
 
-				if (suggestion && suggestion.getAttribute("data-action")) {
+				if (suggestion && suggestion.getAttribute(this.options.actionAttribute)) {
 					suggestions[suggestions.length - 1].classList.add(this.options.selectedClass);
 				}
 			}
 		},
 
-		selectSuggestion: function selectSuggestion(event, element, params) {
+		selectSuggestion: function click(event, element, params) {
 			event.stop();
 			element.parentNode.removeChild(element);
 			this._appendItem(element);
 			this.focus();
 		},
 
-		showSuggestions: function showSuggestions() {
+		showSuggestions: function() {
 			var list = this.suggestionList();
 
 			if (list.style.display === "none") {

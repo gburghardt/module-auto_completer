@@ -1,18 +1,19 @@
 {
-	"name": "module-pack",
+	"name": "module-auto_completer",
 	"description": "",
 	"authors": [
 		"Greg Burghardt <greg_burghardt@yahoo.com>"
 	],
 	"version": "1.0.0",
 	"license": "MIT",
-	"repository": { "type": "git", "url": "https://github.com/gburghardt/module-pack.git" },
+	"repository": { "type": "git", "url": "https://github.com/gburghardt/module-auto_completer.git" },
 	"main": [
 	],
 	"dependencies": {
-		"module-manager": "file:///c/Users/BurghardtG/code/git/module-manager/.git#development",
-		"module-base": "file:///c/Users/BurghardtG/code/git/module-base/.git#master",
-		"module-utils": "file:///c/Users/BurghardtG/code/git/module-utils/.git#master"
+		"module-manager": "file:///c/Users/BurghardtG/code/git/framework/module-manager/.git#development",
+		"module-base": "file:///c/Users/BurghardtG/code/git/framework/module-base/.git#master",
+		"module-utils": "file:///c/Users/BurghardtG/code/git/framework/module-utils/.git#master",
+		"oxydizr": "file:///c/Users/BurghardtG/code/git/oxydizr/.git#master"
 	},
 	"devDependencies": {
 		"jasmine": "~2.0",
