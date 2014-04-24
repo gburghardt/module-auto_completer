@@ -1,6 +1,6 @@
 {
 	"name": "module-auto_completer",
-	"description": "",
+	"description": "An Ajaxified, type-ahead module.",
 	"authors": [
 		"Greg Burghardt <greg_burghardt@yahoo.com>"
 	],
@@ -8,12 +8,13 @@
 	"license": "MIT",
 	"repository": { "type": "git", "url": "https://github.com/gburghardt/module-auto_completer.git" },
 	"main": [
+		"src/module/auto_completer_module.js"
 	],
 	"dependencies": {
-		"module-manager": "file:///c/Users/BurghardtG/code/git/framework/module-manager/.git#development",
-		"module-base": "file:///c/Users/BurghardtG/code/git/framework/module-base/.git#master",
-		"module-utils": "file:///c/Users/BurghardtG/code/git/framework/module-utils/.git#master",
-		"oxydizr": "file:///c/Users/BurghardtG/code/git/oxydizr/.git#master"
+		"module-manager": "~1.0.0",
+		"module-base": "~1.0.0",
+		"module-utils": "~1.0.0",
+		"oxydizr": "~1.0.0"
 	},
 	"devDependencies": {
 		"jasmine": "~2.0",
