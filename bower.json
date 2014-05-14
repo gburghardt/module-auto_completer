@@ -4,17 +4,17 @@
 	"authors": [
 		"Greg Burghardt <greg_burghardt@yahoo.com>"
 	],
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"license": "MIT",
 	"repository": { "type": "git", "url": "https://github.com/gburghardt/module-auto_completer.git" },
 	"main": [
 		"src/module/auto_completer_module.js"
 	],
 	"dependencies": {
-		"module-manager": "~1.0.0",
-		"module-base": "~1.0.0",
-		"module-utils": "~1.0.0",
-		"oxydizr": "~1.0.0"
+		"module-manager": "~1.1",
+		"module-base": "~1.0.1",
+		"module-utils": "~1.0.3",
+		"oxydizr": "~1.0.1"
 	},
 	"devDependencies": {
 		"jasmine": "~2.0",
